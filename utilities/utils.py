@@ -24,3 +24,27 @@ def remove_temporary_directory():
 def generate_temporary_directory():
     os.makedirs("temporary", exist_ok=True)
     os.makedirs("temporary/image", exist_ok=True)
+
+
+# Validate configured temporary directory and needed subdirectories
+def validate_initial_temporary_directory_structure():
+    if not os.path.exists("temporary"):
+        raise FileNotFoundError("Error: Temporary directory does not exist!!")
+    if not os.path.exists("temporary/input.txt"):
+        raise FileNotFoundError("Error: Temporary input file does not exist!!")
+    if not os.path.exists("temporary/image"):
+        raise FileNotFoundError("Error: Temporary image directory does not exist!!")
+
+
+# Validate temporary directory and needed subdirectories and files
+def validate_filled_temporary_directory():
+    if not os.path.exists("temporary"):
+        raise FileNotFoundError("Error: Temporary directory does not exist!!")
+    if not os.path.exists("temporary/image"):
+        raise FileNotFoundError("Error: Temporary image directory does not exist!!")
+    if len(os.listdir("temporary/image")) == 0:
+        raise FileNotFoundError("Error: Temporary image directory is empty!!")
+    if not os.path.exists("temporary/voice.wav"):
+        raise FileNotFoundError("Error: Temporary voice file does not exist!!")
+    if not os.path.exists("temporary/music.wav"):
+        raise FileNotFoundError("Error: Temporary music file does not exist!!")

@@ -20,29 +20,20 @@ def main():
     # Scrap the data from the website and save to a file
     generate_input.generate_input_files(os.environ.get("URL"))
     # Generate images / video clips from input file
-    if os.path.exists("temporary/input.txt"):
-        with open("temporary/input.txt", "r") as f:
-            text = f.read()
-            # voicegen.generate_voice_from_text(text, os.environ.get("VOICE_PRESET"))
-    #         musicgen.generate_music_from_text(os.environ.get("MUSIC_PRESET"))
-            clipgen.generate_video_from_text(text)
-    else:
-        raise FileNotFoundError("Error: Input file does not exist!!")
-    # Generate the final output file
-    # check that all the needed files exist
-    # if not, raise an exception
-    if (
-        os.path.exists("temporary/voice.wav")
-        and os.path.exists("temporary/music.wav")
-        and os.listdir("temporary/image")
-    ):
-        print("All files exist")
-        videogen.generate_video()
-        print("Generated video")
-    # Combine the voice and music files
-    else:
-        raise FileNotFoundError("Error: One or more required files do not exist!!")
+    utils.validate_initial_temporary_directory_structure()
+    with open("temporary/input.txt", "r") as f:
+        text = f.read()
+        voicegen.generate_voice_from_text(text, os.environ.get("VOICE_PRESET"))
+        musicgen.generate_music_from_text(os.environ.get("MUSIC_PRESET"))
+        clipgen.generate_video_from_text(text)
+    utils.validate_temporary_directory()
+    videogen.generate_video()
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except FileNotFoundError as e:
+        print(f"An error occurred: {e}")
+    except Exception as e:
+        print(f"An unexcepected error occurred: {e}")
