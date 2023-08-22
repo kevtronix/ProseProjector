@@ -10,19 +10,35 @@ def get_sentences(text):
     # split the text into sentences and return a list
     return sent_tokenize(text)
 
-
-# use T5 model to identify main theme of a given input
-def generate_descriptive_phrases_of_text(input_text):
+def generate_musical_description(text):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     # load tokenizer and model
-    tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-small")
+    tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-large")
     model = T5ForConditionalGeneration.from_pretrained(
         "google/flan-t5-large", 
         torch_dtype=torch.float16,
         device_map="auto",
     )
     # generate main theme
-    input_text = f"take the following text and turn into a general description of a scene that represents what it is saying which can be turned into an image: '{input_text}'"
+    input_text = f"take the following text and turn into a detailed description of music that matches what the text is talking about: '{text}'"
+    input_ids = tokenizer(input_text, return_tensors="pt").input_ids
+    input_ids = input_ids.to(device)
+    outputs = model.generate(input_ids)
+    return tokenizer.decode(outputs[0], skip_special_tokens=True)
+
+
+# use T5 model to identify main theme of a given input
+def generate_descriptive_phrases_of_text(text):
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    # load tokenizer and model
+    tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-large")
+    model = T5ForConditionalGeneration.from_pretrained(
+        "google/flan-t5-large", 
+        torch_dtype=torch.float16,
+        device_map="auto",
+    )
+    # generate main theme
+    input_text = f"take the following text and turn into a general description of a scene that represents what it is saying which can be turned into an image: '{text}'"
     input_ids = tokenizer(input_text, return_tensors="pt").input_ids
     input_ids = input_ids.to(device)
     outputs = model.generate(input_ids)
@@ -32,7 +48,7 @@ def generate_descriptive_phrases_of_text(input_text):
 def generate_negative_prompt(text):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     # load tokenizer and model
-    tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-small")
+    tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-large")
     model = T5ForConditionalGeneration.from_pretrained(
         "google/flan-t5-large",
         torch_dtype=torch.float16,

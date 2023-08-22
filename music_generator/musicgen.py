@@ -1,31 +1,16 @@
 import scipy
-from transformers import T5Tokenizer, T5ForConditionalGeneration
 from transformers import AutoProcessor, MusicgenForConditionalGeneration
-
-
-# use T5 model to identify main theme of a given input
-def generate_main_theme(input_text):
-    # load tokenizer and model
-    tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-small")
-    model = T5ForConditionalGeneration.from_pretrained(
-        "google/flan-t5-small", device_map="auto"
-    )
-    # generate main theme
-    input = f"generate main theme of: {input_text}"
-    input_ids = tokenizer(input, return_tensors="pt").input_ids
-    input_ids = input_ids.to(model.device)
-    outputs = model.generate(input_ids, max_length=59)
-    return tokenizer.decode(outputs[0], skip_special_tokens=True)
+from text_analysis import text_analyzer
 
 
 # Analyze the main theme and generate music using facebook/musicgen-small
-def generate_music(main_theme):
+def generate_music(prompt):
     processor = AutoProcessor.from_pretrained("facebook/musicgen-small")
     model = MusicgenForConditionalGeneration.from_pretrained(
         "facebook/musicgen-small"
-    ).to("cuda") 
+    ).to("cuda")
     inputs = processor(
-        text=[main_theme],
+        text=[f"melody, piano,{prompt}"],
         padding=True,
         return_tensors="pt",
     ).to("cuda")
@@ -44,6 +29,6 @@ def save_music(audio_values, sampling_rate, output_path):
 
 # Construct music file from text
 def generate_music_from_text(text):
-    main_theme = generate_main_theme(text)
-    audio_values, sampling_rate = generate_music(main_theme)
+    prompt = text_analyzer.generate_musical_description(text)
+    audio_values, sampling_rate = generate_music(prompt)
     save_music(audio_values, sampling_rate, output_path="temporary/music.wav")
