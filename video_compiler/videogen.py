@@ -1,10 +1,12 @@
 import os
+
 from moviepy.editor import *
+
 from utilities import utils
 
 
 def generate_video():
-    # set the voice 
+    # set the voice
     voice = AudioFileClip("temporary/voice.wav")
     total_duration = voice.duration
     # set the music and loop it to match the length of the voice

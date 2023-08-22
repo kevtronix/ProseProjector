@@ -1,7 +1,7 @@
-from transformers import T5Tokenizer, T5ForConditionalGeneration
-from transformers import AutoProcessor, MusicgenForConditionalGeneration
-import nltk, torch
+import nltk
+import torch
 from nltk.tokenize import sent_tokenize
+from transformers import T5ForConditionalGeneration, T5Tokenizer
 
 
 def get_sentences(text):
@@ -10,12 +10,13 @@ def get_sentences(text):
     # split the text into sentences and return a list
     return sent_tokenize(text)
 
+
 def generate_musical_description(text):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     # load tokenizer and model
     tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-large")
     model = T5ForConditionalGeneration.from_pretrained(
-        "google/flan-t5-large", 
+        "google/flan-t5-large",
         torch_dtype=torch.float16,
         device_map="auto",
     )
@@ -33,7 +34,7 @@ def generate_descriptive_phrases_of_text(text):
     # load tokenizer and model
     tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-large")
     model = T5ForConditionalGeneration.from_pretrained(
-        "google/flan-t5-large", 
+        "google/flan-t5-large",
         torch_dtype=torch.float16,
         device_map="auto",
     )

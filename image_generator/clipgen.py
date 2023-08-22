@@ -1,25 +1,25 @@
 import torch
 from diffusers import (
+    AutoPipelineForText2Image,
     DiffusionPipeline,
     DPMSolverMultistepScheduler,
-    AutoPipelineForText2Image,
 )
 from diffusers.utils import export_to_video
-from text_analysis import text_analyzer
 from PIL import Image
+
+from text_analysis import text_analyzer
 
 
 def generate_kandinsky_image(prompt, negative_prompt):
     torch.cuda.empty_cache()
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     pipe = AutoPipelineForText2Image.from_pretrained(
         "kandinsky-community/kandinsky-2-2-decoder", torch_dtype=torch.float16
     )
     pipe.enable_model_cpu_offload()
 
     image = pipe(
-        prompt=f"cinematic scene of {prompt}",
-        negative_prompt=negative_prompt,
+        prompt=f"cinematic, colorful, {prompt}",
+        negative_prompt=f"non-cinematic, dull scene of {negative_prompt}",
         prior_guidance_scale=1.0,
         height=768,
         width=768,

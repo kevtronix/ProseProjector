@@ -1,16 +1,9 @@
-import scipy, torch
-from transformers import AutoProcessor, BarkModel
-import nltk
-from nltk.tokenize import sent_tokenize
 import noisereduce as nr
+import scipy
+import torch
+from transformers import AutoProcessor, BarkModel
 
-
-# Helper function to split input text into sentences for processing
-def get_sentences(text):
-    # download puntk if not downloaded
-    nltk.download("punkt", quiet=True)
-    # split the text into sentences and return a list
-    return sent_tokenize(text)
+from text_analysis.text_analyzer import get_sentences
 
 
 # Generate voice using the model
@@ -38,12 +31,9 @@ def reduce_noise(speech_numpy_array, sample_rate):
     return nr.reduce_noise(y=speech_numpy_array, sr=sample_rate)
 
 
-
 # Save the voice to a file
 def save_voice(full_speech, sampling_rate, output_path):
-    scipy.io.wavfile.write(
-        output_path, sampling_rate, full_speech
-    )
+    scipy.io.wavfile.write(output_path, sampling_rate, full_speech)
 
 
 # Construct voice recording file from text
