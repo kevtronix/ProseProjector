@@ -25,7 +25,7 @@ def main():
             text = f.read()
             # voicegen.generate_voice_from_text(text, os.environ.get("VOICE_PRESET"))
     #         musicgen.generate_music_from_text(os.environ.get("MUSIC_PRESET"))
-    # clipgen.generate_video_from_text(text)
+            clipgen.generate_video_from_text(text)
     else:
         raise FileNotFoundError("Error: Input file does not exist!!")
     # Generate the final output file

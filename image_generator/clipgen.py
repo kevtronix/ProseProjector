@@ -67,7 +67,7 @@ def save_video(video_frames, output_path):
 def generate_video_from_text(text):
     paragraphs = text_analyzer.get_sentences(text)
     for count, paragraph in enumerate(paragraphs):
-        text_message = text_analyzer.generate_descriptive_phrases_of_text(paragraph)
-        text_message_opposite = text_analyzer.generate_negative_prompt(paragraph)
-        image = generate_kandinsky_image(text_message, text_message_opposite)
+        image_prompt = text_analyzer.generate_descriptive_phrases_of_text(paragraph)
+        negative_image_prompt= text_analyzer.generate_negative_prompt(image_prompt)
+        image = generate_kandinsky_image(image_prompt, negative_image_prompt)
         save_image(image, f"temporary/image/image{count}.png")
