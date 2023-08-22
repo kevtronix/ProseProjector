@@ -13,6 +13,8 @@ from webscraper import generate_input
 def main():
     # Load the environment variables
     load_dotenv()
+    # Configure Settings
+    utils.configure_settings(os.environ.get("DEBUG")) 
     # Clear temporary directory
     utils.remove_temporary_directory()
     # Generate temporary directory
@@ -23,10 +25,10 @@ def main():
     utils.validate_initial_temporary_directory_structure()
     with open("temporary/input.txt", "r") as f:
         text = f.read()
-        voicegen.generate_voice_from_text(text, os.environ.get("VOICE_PRESET"))
+        # voicegen.generate_voice_from_text(text, os.environ.get("VOICE_PRESET"))
         musicgen.generate_music_from_text(os.environ.get("MUSIC_PRESET"))
-        clipgen.generate_video_from_text(text)
-    utils.validate_temporary_directory()
+        # clipgen.generate_video_from_text(text)
+    utils.validate_filled_temporary_directory()
     videogen.generate_video()
 
 

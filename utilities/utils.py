@@ -1,5 +1,6 @@
 import os
 import shutil
+import logging
 
 
 def list_files_in_directory(directory_path):
@@ -48,3 +49,17 @@ def validate_filled_temporary_directory():
         raise FileNotFoundError("Error: Temporary voice file does not exist!!")
     if not os.path.exists("temporary/music.wav"):
         raise FileNotFoundError("Error: Temporary music file does not exist!!")
+
+
+def configure_logging(debug):
+    if debug:
+        pass 
+    else:
+        logging.getLogger("transformers").setLevel(logging.ERROR) 
+
+def configure_settings(debugString):
+    if debugString == "True":
+        configure_logging(True)
+    else:
+        configure_logging(False)
+    
