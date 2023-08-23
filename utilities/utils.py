@@ -1,6 +1,8 @@
+import logging
 import os
 import shutil
-import logging
+
+import noisereduce as nr
 
 
 def list_files_in_directory(directory_path):
@@ -53,13 +55,17 @@ def validate_filled_temporary_directory():
 
 def configure_logging(debug):
     if debug:
-        pass 
+        pass
     else:
-        logging.getLogger("transformers").setLevel(logging.ERROR) 
+        logging.getLogger("transformers").setLevel(logging.ERROR)
+
 
 def configure_settings(debugString):
     if debugString == "True":
         configure_logging(True)
     else:
         configure_logging(False)
-    
+
+
+def reduce_noise(speech_numpy_array, sample_rate):
+    return nr.reduce_noise(y=speech_numpy_array, sr=sample_rate)

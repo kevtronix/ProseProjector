@@ -64,9 +64,11 @@ def save_video(video_frames, output_path):
     print(export_to_video(video_frames, output_video_path=output_path))
 
 
-def generate_video_from_text(text):
+def generate_video_from_text(text, image_limit=24):
     paragraphs = text_analyzer.get_sentences(text)
     for count, paragraph in enumerate(paragraphs):
+        if count == image_limit:
+            break
         image_prompt = text_analyzer.generate_descriptive_phrases_of_text(paragraph)
         negative_image_prompt = text_analyzer.generate_negative_prompt(image_prompt)
         image = generate_kandinsky_image(image_prompt, negative_image_prompt)

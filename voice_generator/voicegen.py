@@ -1,9 +1,9 @@
-import noisereduce as nr
 import scipy
 import torch
 from transformers import AutoProcessor, BarkModel
 
 from text_analysis.text_analyzer import get_sentences
+from utilities.utils import reduce_noise
 
 
 # Generate voice using the model
@@ -25,10 +25,6 @@ def generate_voice(text, voice_preset):
         total_speech.append(sentence_speech_values)
     full_speech = torch.cat(total_speech, dim=1)
     return full_speech.cpu().numpy().squeeze(), sample_rate
-
-
-def reduce_noise(speech_numpy_array, sample_rate):
-    return nr.reduce_noise(y=speech_numpy_array, sr=sample_rate)
 
 
 # Save the voice to a file

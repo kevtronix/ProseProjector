@@ -1,19 +1,32 @@
-import os
-
+import scipy
 from moviepy.editor import *
 
 from utilities import utils
 
 
+def configure_voice(
+    source_audio_path="temporary/voice.wav",
+):
+    voice = AudioFileClip(source_audio_path)
+    voice = voice.fx(afx.volumex, 2)
+    return voice
+
+
+def configure_music(duration, source_audio_path="temporary/music.wav"):
+    music = AudioFileClip(source_audio_path)
+    music = music.fx(afx.volumex, 0.01)
+    music = music.audio_loop(duration=duration)
+    return music
+
+
 def generate_video():
     # set the voice
-    voice = AudioFileClip("temporary/voice.wav")
+    voice = configure_voice()
     total_duration = voice.duration
     # set the music and loop it to match the length of the voice
-    background_music = AudioFileClip("temporary/music.wav")
-    looped_music = background_music.audio_loop(duration=total_duration)
+    music = configure_music(total_duration)
     # Combine the voice and music
-    final_audio = CompositeAudioClip([looped_music.volumex(0.1), voice.volumex(0.9)])
+    final_audio = CompositeAudioClip([music, voice])
 
     # set the images
     images = utils.list_files_in_directory("temporary/image")
